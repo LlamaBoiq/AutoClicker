@@ -3,25 +3,42 @@ import threading
 from pynput.mouse import Button, Controller
 from pynput.keyboard import Listener, KeyCode
 firststage = True
+_return_ = False
 
-while firststage == True: 
-    try:
-        delay = float(input("Enter a click delay: "))
-        print("1. LMB\n2. RMB")
-        button = input()
-        if button == "1":  # Option 1
-            button = Button.left
-            firststage = False
-        elif button == "2":  # Option 2
-            button = Button.right
-            firststage = False
-        start_stop_key = KeyCode(char="-")  # Toggle Hotkey
-        exit_key = KeyCode(char="=")  # Exit Hotkey
-        tipstr = "Press [{0}] to toggle autoclicker. Press [{1}] to exit application"
-        print(tipstr.format(start_stop_key, exit_key))  # Displays Tip
-    except ValueError:
-        firststage = True  # Except Error
-        print("Invalid Input")
+start_stop_key = KeyCode(char="-")  # Toggle Hotkey
+exit_key = KeyCode(char="=")  # Exit Hotkey
+
+def State(firststage=firststage):
+    while firststage == True:
+        try:
+            global _return_
+            global delay
+            global button
+            global start_stop_key
+            global exit_key
+            delay = float(input("Enter a click delay: "))
+            print("1. LMB\n2. RMB")
+            button = input()
+            if button == "1":  # Option 1
+                button = Button.left
+                firststage = False
+                _return_ = False
+            elif button == "2":  # Option 2
+                button = Button.right
+                firststage = False
+                _return_ = False
+            else:
+                print("Invalid Input")
+                _return_ = True
+        except ValueError:
+            print("Invalid Input")
+            _return_ = True
+        if _return_ == False:
+            tipstr = "Press [{0}] to toggle autoclicker. Press [{1}] to exit application"
+            print(tipstr.format(start_stop_key, exit_key))  # Displays Tip
+                
+
+State(firststage=firststage)
 
 
 class ClickMouse(threading.Thread):
